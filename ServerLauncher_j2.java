@@ -279,7 +279,7 @@ public class ServerLauncher_j2 extends Thread {
                                     // Admins are not affected by blacklisting.
                                     // Trusted players are if fun mode is off.
                                     if( !isAdmin(name) &&  
- //mbax add adminblacklist                  !( isTrusted(name) && isFun ) && ( adminblacklist.contains ( parts[1] ) ) &&
+                                            !( isTrusted(name) && isFun ) && ( adminblacklist.contains ( parts[1] ) ) &&
                                             !( !isItemWhiteList ^ blacklist.contains( parts[1] ) ) ) {
                                         System.out.println( name + " tried to summon something blacklisted." );
                                     } else {
