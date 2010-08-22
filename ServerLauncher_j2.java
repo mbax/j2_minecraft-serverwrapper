@@ -12,6 +12,11 @@
  * I am not going to be a stickler about licensing and all that jazz. Just be 
  * sure to give credit to me where credit is due and we can all get along like
  * grown-ups. Okay?
+ * 
+ * Notes by mbaxter:
+ * This version has an extra blacklist, which only admins can use items from,
+ * applicable at all times.  This way, items like bedrock/adminium can be blocked
+ * from even trusted. Does not apply to the #give command, of course.
  *
  */
 
@@ -278,14 +283,21 @@ public class ServerLauncher_j2 extends Thread {
                                     parts[1] = "" + id;
                                     // Admins are not affected by blacklisting.
                                     // Trusted players are if fun mode is off.
+                                    // Added in here admin blacklist line
                                     if( !isAdmin(name) &&  
                                             !( isTrusted(name) && isFun ) && ( adminblacklist.contains ( parts[1] ) ) &&
                                             !( !isItemWhiteList ^ blacklist.contains( parts[1] ) ) ) {
                                         System.out.println( name + " tried to summon something blacklisted." );
                                     } else {
                                         System.out.println( "Summoning " + times + " of " + id + " for " + name );
-                                        for( int i = 0; i < times; i++ ) {
-                                            myWriter.println( "give " + name + " " + id );
+                                        while (times > 0) {
+                                            if (times >= 64) {
+                                                myWriter.println( "give " + name + " " + id + " " + 64 );
+                                                times -= 64;
+                                            } else {
+                                                myWriter.println( "give " + name + " " + id + " " + times );
+                                                times = 0;
+                                            }
                                         }
                                     }
                                 } catch( NumberFormatException e ) {
