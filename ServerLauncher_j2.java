@@ -491,16 +491,17 @@ public class ServerLauncher_j2 extends Thread {
             if( myPlayerCap > 0 && myPlayerCount > myPlayerCap ) {
                 kick( name );
                 playerPrint( "Player cap reached, kicking " + name + "." );
-            } else {
-                //playerPrint( "Welcome, " + name + "!" );
+//            } else {
+//                playerPrint( "Welcome, " + name + "!" );
             }
-        } else {
-            if( isAdmin(name) ) {
-                //playerPrint( "Quick! Everybody hide! " + name + " is an admin!" );
-            } else if( isTrusted( name ) ) {
-                //playerPrint( name + " is a pretty trustworthy guy." );
-            }
+//        } else {
+//            if( isAdmin(name) ) {
+//                playerPrint( "Quick! Everybody hide! " + name + " is an admin!" );
+//            } else if( isTrusted( name ) ) {
+//                playerPrint( name + " is a pretty trustworthy guy." );
+//            }
         }
+        //Just commenting out the stuff for now, so you can re-enable it
         motd();
 
     }
