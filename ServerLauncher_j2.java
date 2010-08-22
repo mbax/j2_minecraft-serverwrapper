@@ -480,13 +480,13 @@ public class ServerLauncher_j2 extends Thread {
                 kick( name );
                 playerPrint( "Player cap reached, kicking " + name + "." );
             } else {
-                playerPrint( "Welcome, " + name + "!" );
+                //playerPrint( "Welcome, " + name + "!" );
             }
         } else {
             if( isAdmin(name) ) {
-                playerPrint( "Quick! Everybody hide! " + name + " is an admin!" );
+                //playerPrint( "Quick! Everybody hide! " + name + " is an admin!" );
             } else if( isTrusted( name ) ) {
-                playerPrint( name + " is a pretty trustworthy guy." );
+                //playerPrint( name + " is a pretty trustworthy guy." );
             }
         }
         motd();
