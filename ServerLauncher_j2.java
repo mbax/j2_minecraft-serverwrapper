@@ -934,47 +934,6 @@ public class ServerLauncher_j2 extends Thread {
 
         // Admin List
         permissions.put( "server", 3 );
-        try {
-            BufferedReader safile = null;
-            safile = new BufferedReader( new FileReader( "superadmins.txt" ) );
-            while( safile.ready() ) {
-                String name = safile.readLine();
-                permissions.put( name.toLowerCase(), 3 );
-            }
-            System.out.println("Senior Admins loaded");
-            safile.close();
-        } catch( IOException e ) {
-            System.err.println( "ERROR: Could not open superadmins.txt" );
-        }
-        try {
-            BufferedReader afile = null;
-            afile = new BufferedReader( new FileReader( "admins.txt" ) );
-            while( afile.ready() ) {
-                String name = afile.readLine();
-                permissions.put( name.toLowerCase(), 2 );
-            }
-            System.out.println("Admins loaded");
-            afile.close();
-        } catch( IOException e ) {
-            System.err.println( "ERROR: Could not open admins.txt" );
-        }
-
-        // Trusted Player List
-        try {
-            BufferedReader tfile = null;
-            tfile = new BufferedReader( new FileReader( "trusted.txt" ) );
-            while( tfile.ready() ) {
-                String name = tfile.readLine();
-                if( !isTrusted( name.toLowerCase() ) ) {
-                    permissions.put( name.toLowerCase(), 1 );
-                }
-            }
-            System.out.println("Trusted loaded");
-            tfile.close();
-        } catch( IOException e ) {
-            System.out.println( "ERROR: Could not open trusted.txt" );
-        }
-
         String file;// = "banned.txt";
         if( isPlayerWhiteList ) {
             file = "allowed.txt";
@@ -998,6 +957,48 @@ public class ServerLauncher_j2 extends Thread {
             } catch( IOException e ) {
                 System.err.println( "ERROR: Could not open " + file );
             }
+        }
+        
+
+        // Trusted Player List
+        try {
+            BufferedReader tfile = null;
+            tfile = new BufferedReader( new FileReader( "trusted.txt" ) );
+            while( tfile.ready() ) {
+                String name = tfile.readLine();
+                if( !isTrusted( name.toLowerCase() ) ) {
+                    permissions.put( name.toLowerCase(), 1 );
+                }
+            }
+            System.out.println("Trusted loaded");
+            tfile.close();
+        } catch( IOException e ) {
+            System.out.println( "ERROR: Could not open trusted.txt" );
+        }
+
+        try {
+            BufferedReader afile = null;
+            afile = new BufferedReader( new FileReader( "admins.txt" ) );
+            while( afile.ready() ) {
+                String name = afile.readLine();
+                permissions.put( name.toLowerCase(), 2 );
+            }
+            System.out.println("Admins loaded");
+            afile.close();
+        } catch( IOException e ) {
+            System.err.println( "ERROR: Could not open admins.txt" );
+        }
+        try {
+            BufferedReader safile = null;
+            safile = new BufferedReader( new FileReader( "superadmins.txt" ) );
+            while( safile.ready() ) {
+                String name = safile.readLine();
+                permissions.put( name.toLowerCase(), 3 );
+            }
+            System.out.println("Senior Admins loaded");
+            safile.close();
+        } catch( IOException e ) {
+            System.err.println( "ERROR: Could not open superadmins.txt" );
         }
         file = "black_list.txt";
         if( isItemWhiteList ) {
