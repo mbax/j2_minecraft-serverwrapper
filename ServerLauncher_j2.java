@@ -931,6 +931,7 @@ public class ServerLauncher_j2 extends Thread {
         kits = new HashMap<String,ArrayList<Integer>>();
         ipassoc = new HashMap<String,String>();
         points = new HashMap<String,Integer>();
+        protectedtrusted = new HashSet<String>();
 
         // Admin List
         permissions.put( "server", 3 );
