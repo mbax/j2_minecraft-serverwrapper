@@ -286,8 +286,9 @@ public class ServerLauncher_j2 extends Thread {
                                     // Trusted players are if fun mode is off.
                                     // Added in here admin blacklist line
                                     if( !isAdmin(name) &&  
-                                            !( isTrusted(name) && isFun ) && ( adminblacklist.contains ( parts[1] ) ) &&
-                                            !( !isItemWhiteList ^ blacklist.contains( parts[1] ) ) ) {
+                                            !( isTrusted(name) && isFun )  &&	
+                                            !( !isItemWhiteList ^ blacklist.contains( parts[1] ) ) ||
+                                             ( adminblacklist.contains ( parts[1] ) ) ) {
                                         System.out.println( name + " tried to summon something blacklisted." );
                                     } else {
                                         System.out.println( "Summoning " + times + " of " + id + " for " + name );
