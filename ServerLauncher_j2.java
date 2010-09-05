@@ -411,7 +411,7 @@ public class ServerLauncher_j2 extends Thread {
                                     isAdmin(name) ) {
                                 admin( name, parts[1] );
                                 // #unadmin <name>
-                            } else if ( parts.length == 2 && parts[0].equalsIgnoreCase( "unadmin" ) && isAdmin(name) ) {
+                            } else if ( parts.length == 2 && parts[0].equalsIgnoreCase( "unadmin" ) ) {
                                 unadmin( name, parts[1] );
                                 // #blacklist <id>
                             } else if ( parts.length >= 1 && parts[0].equalsIgnoreCase( list_command ) ) {  
