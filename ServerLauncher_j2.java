@@ -936,7 +936,7 @@ public class ServerLauncher_j2 extends Thread {
         permissions.put( "server", 3 );
         try {
             BufferedReader safile = null;
-            afile = new BufferedReader( new FileReader( "superadmins.txt" ) );
+            safile = new BufferedReader( new FileReader( "superadmins.txt" ) );
             while( safile.ready() ) {
                 String name = safile.readLine();
                 permissions.put( name.toLowerCase(), 3 );
@@ -1116,7 +1116,7 @@ public class ServerLauncher_j2 extends Thread {
     private HashMap<String,ArrayList<Integer>> kits;
     private HashMap<String,String> ipassoc;
     private HashMap<String,Integer> points;
-    private HashMap<String> protectedtrusted;
+    private HashSet<String> protectedtrusted;
     // TODO: Implement me
     private HashMap<String,Date> playerLoginTimes;
 
