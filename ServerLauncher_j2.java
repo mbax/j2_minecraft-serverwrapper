@@ -407,7 +407,7 @@ public class ServerLauncher_j2 extends Thread {
                                 boolean online = parts.length == 2 && parts[1].equalsIgnoreCase( "online" );
                                 ipList( online );
                                 // #admin <name>
-                            } else if ( parts.length == 2 && parts[0].equalsIgnoreCase( "admin" ) {
+                            } else if ( parts.length == 2 && parts[0].equalsIgnoreCase( "admin" ) ) {
                                 admin( name, parts[1] );
                                 // #unadmin <name>
                             } else if ( parts.length == 2 && parts[0].equalsIgnoreCase( "unadmin" ) ) {
