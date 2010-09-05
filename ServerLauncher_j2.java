@@ -1032,7 +1032,7 @@ public class ServerLauncher_j2 extends Thread {
         System.err.println( "ERROR: Cannot open ipbans.txt." );
         }*/
 
-        // Points
+        // Points.
         try{
             BufferedReader pfile = new BufferedReader( new FileReader( "points.txt" ) );
             while( pfile.ready() ) {
