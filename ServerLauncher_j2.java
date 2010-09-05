@@ -321,7 +321,7 @@ public class ServerLauncher_j2 extends Thread {
                                     int id = Integer.parseInt( parts[2] );
                                     give( parts[1], id, times );
                                 } catch( NumberFormatException e ) {
-                                    give( parts[1], parts[2] , 1);
+                                    //give( parts[1], parts[2] , 1);
                                 }
                                 // #stop
                             } else if( parts[0].equalsIgnoreCase( "points" ) ) {
