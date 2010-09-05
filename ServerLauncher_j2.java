@@ -628,7 +628,7 @@ public class ServerLauncher_j2 extends Thread {
     }
     
     public void teleport (String playerwho, String playerto) {
-        if( isFun || ( isTrusted(name) && trustedTP ) && ( !isProtected(playerto) || isAdmin(playerwho) ) ){
+        if( ( isFun || ( isTrusted(playerwho) && trustedTP ) ) && ( !isProtected(playerto) || isAdmin(playerwho) ) ){
             myWriter.println( "tp " + playerwho + " " + playerto );
         }
         else if(isProtected(playerto)){
