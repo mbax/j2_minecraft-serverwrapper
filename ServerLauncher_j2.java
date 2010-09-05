@@ -269,6 +269,7 @@ public class ServerLauncher_j2 extends Thread {
                                     try { 
                                         times = Integer.parseInt( parts[2] );
                                     } catch( Exception e ) {
+                                    times = 0;
                                     }
                                     // A reasonable cap is 64.
                                     // A reasonable mbaxter cap is 256
@@ -290,21 +291,13 @@ public class ServerLauncher_j2 extends Thread {
                                         System.out.println( name + " tried to summon something blacklisted." );
                                     } else {
                                         System.out.println( "Summoning " + times + " of " + id + " for " + name );
-                                        while (times > 0) {
-                                            if (times >= 64) {
-                                                myWriter.println( "give " + name + " " + id + " " + 64 );
-                                                times -= 64;
-                                            } else {
-                                                myWriter.println( "give " + name + " " + id + " " + times );
-                                                times = 0;
-                                            }
-                                        }
+                                        give (name, id, times);
                                     }
                                 } catch( NumberFormatException e ) {
                                     ArrayList<Integer> ids = kits.get( parts[1].toLowerCase() );
                                     if( ids != null ) {
                                         for( Integer i : ids ) {
-                                            give( name, i );
+                                            give( name, i , 1);
                                         }
                                     }
                                 }
@@ -328,7 +321,7 @@ public class ServerLauncher_j2 extends Thread {
                                     int id = Integer.parseInt( parts[2] );
                                     give( parts[1], id, times );
                                 } catch( NumberFormatException e ) {
-                                    give( parts[1], parts[2] );
+                                    give( parts[1], parts[2] , 1);
                                 }
                                 // #stop
                             } else if( parts[0].equalsIgnoreCase( "points" ) ) {
@@ -355,7 +348,7 @@ public class ServerLauncher_j2 extends Thread {
                                     }
 
                                 }
-                            } else if( parts[0].equalsIgnoreCase( "stop" ) && isAdmin(name) ) {
+                            } else if( parts[0].equalsIgnoreCase( "stop" ) && isSuperAdmin(name) ) {
                                 keep_going = false;
                                 myWriter.println( "Server is going down!" );
                                 myWriter.println( "stop" );
@@ -416,7 +409,7 @@ public class ServerLauncher_j2 extends Thread {
                                 // #admin <name>
                             } else if ( parts.length == 2 && parts[0].equalsIgnoreCase( "admin" ) && 
                                     isAdmin(name) ) {
-                                admin( parts[1] );
+                                admin( name, parts[1] );
                                 // #unadmin <name>
                             } else if ( parts.length == 2 && parts[0].equalsIgnoreCase( "unadmin" ) && isAdmin(name) ) {
                                 unadmin( name, parts[1] );
@@ -456,12 +449,7 @@ public class ServerLauncher_j2 extends Thread {
                         }
                         else if( m[2].matches() ) {
                             connectedPlayers = m[2].group(1);
-                        } 
-                        else if( m[4].matches() ) {
-                            admin( m[4].group(1) );
-                        } else if( m[5].matches() ) {
-                            unadmin( "server", m[5].group(1) );
-                        }
+                        }  
                     }
                 }
                 sleep( 100 );
@@ -569,13 +557,16 @@ public class ServerLauncher_j2 extends Thread {
         return b != null;
     }
 
-    public void admin( String name ) {
-        playerPrint( name + " is now an admin!" );
-        permissions.put( name.toLowerCase(), P_ADMIN );
+    public void admin( String admin, String name ) {
+        if( isSuperAdmin(admin) ) {
+            if( !isAdmin( name ) ) {
+                playerPrint( name + " is now an admin!" );
+                permissions.put( name.toLowerCase(), P_ADMIN );
+            }
+        }
     }
 
     public void unadmin( String admin, String name ) {
-        // FUTURE: If the admin is a higher status than name, then unadmin name.
         if( isSuperAdmin(admin) ) {
             if( isAdmin( name ) ) {
                 playerPrint( name + " is no longer an admin!" );
@@ -603,12 +594,20 @@ public class ServerLauncher_j2 extends Thread {
         myWriter.println( "kick " + victim );
     }
 
-    public void give( String name, int id ) {
-        myWriter.println( "give " + name + " " + id );
-    }
+
 
     public void give( String name, int id, int count ) {
-        myWriter.println( "give " + name + " " + id + " " + count );
+        int times = count;
+        while (times >0)
+        {
+        if (times >= 64) {
+            myWriter.println( "give " + name + " " + id + " " + 64 );
+            times -= 64;
+            } else {
+            myWriter.println( "give " + name + " " + id + " " + times );
+            times = 0;
+            }
+        }
     }
 
     public void give( String name, String kit ) {
@@ -900,17 +899,25 @@ public class ServerLauncher_j2 extends Thread {
         // Admin List
         permissions.put( "server", 3 );
         try {
+            BufferedReader safile = null;
+            afile = new BufferedReader( new FileReader( "superadmins.txt" ) );
+            while( safile.ready() ) {
+                String name = safile.readLine();
+                permissions.put( name.toLowerCase(), 3 );
+            }
+            System.out.println("Senior Admins loaded");
+            safile.close();
+        } catch( IOException e ) {
+            System.err.println( "ERROR: Could not open superadmins.txt" );
+        }
+        try {
             BufferedReader afile = null;
             afile = new BufferedReader( new FileReader( "admins.txt" ) );
             while( afile.ready() ) {
                 String name = afile.readLine();
-//                System.out.println( name + " is an Administrator." ); 
                 permissions.put( name.toLowerCase(), 2 );
-                //admins.add( name.toLowerCase() );
             }
-            //mbaxter add
             System.out.println("Admins loaded");
-            //
             afile.close();
         } catch( IOException e ) {
             System.err.println( "ERROR: Could not open admins.txt" );
@@ -922,15 +929,11 @@ public class ServerLauncher_j2 extends Thread {
             tfile = new BufferedReader( new FileReader( "trusted.txt" ) );
             while( tfile.ready() ) {
                 String name = tfile.readLine();
-//                System.out.println( name + " is trusted." );
                 if( !isTrusted( name.toLowerCase() ) ) {
                     permissions.put( name.toLowerCase(), 1 );
                 }
-                //trusted.add( name.toLowerCase() );
             }
-//mbaxter add
             System.out.println("Trusted loaded");
-//
             tfile.close();
         } catch( IOException e ) {
             System.out.println( "ERROR: Could not open trusted.txt" );
@@ -1077,6 +1080,7 @@ public class ServerLauncher_j2 extends Thread {
     private HashMap<String,ArrayList<Integer>> kits;
     private HashMap<String,String> ipassoc;
     private HashMap<String,Integer> points;
+    private HashMap<String> protectedtrusted;
     // TODO: Implement me
     private HashMap<String,Date> playerLoginTimes;
 
