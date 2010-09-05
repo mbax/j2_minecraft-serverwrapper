@@ -436,10 +436,14 @@ public class ServerLauncher_j2 extends Thread {
                                 // #fun
                             } else if( parts[0].equalsIgnoreCase( "fun" ) && isAdmin(name) ) {
                                 toggleFun();
-                            } else if( parts.length == 2 && parts[0].equalsIgnoreCase( "tp" ) && ( isFun || ( isTrusted(name) && trustedTP ) ) ) {
-                                myWriter.println( "tp " + name + " " + parts[1] );                            
-                            } else if( parts.length == 2 && parts[0].equalsIgnoreCase( "bring" ) && isAdmin( name ) ) {
-                                myWriter.println( "tp " + parts[1] + " " + name );
+                            } else if( parts[0].equalsIgnoreCase( "protect" ) && isTrusted(name) ) {
+                                if(!protectedtrusted.contains(name)){protectedtrusted.add( name );}
+                            } else if( parts[0].equalsIgnoreCase( "unprotect" ) && isTrusted(name) ) {
+                                if(protectedtrusted.contains(name)){protectedtrusted.remove( name );}   
+                            } else if( parts.length == 2 && parts[0].equalsIgnoreCase( "tp" ) ) {
+                                teleport( name , parts[1] );                            
+                            } else if( parts.length == 2 && parts[0].equalsIgnoreCase( "bring" )  ) {
+                                bring( parts[1] , name );
                             } else {
                                 //Invalid command.
                             }
@@ -585,6 +589,7 @@ public class ServerLauncher_j2 extends Thread {
 
     public void untrust( String name ) {
         if( !isAdmin( name ) && isTrusted(name) ) {
+            if(protectedtrusted.contains(name)){protectedtrusted.remove( name );}
             if( permissions.remove( name.toLowerCase() ) != null ) {
                 playerPrint( name + " is no longer trusted!" );
             }
@@ -608,6 +613,21 @@ public class ServerLauncher_j2 extends Thread {
             myWriter.println( "give " + name + " " + id + " " + times );
             times = 0;
             }
+        }
+    }
+    
+    public void teleport (String playerwho, String playerto) {
+        if( isFun || ( isTrusted(name) && trustedTP ) && ( !isProtected(playerto) || isAdmin(playerwho) ) ){
+            myWriter.println( "tp " + playerwho + " " + playerto );
+        }
+        else if(isProtected(playerto)){
+            playerPrint("Cannot teleport to protected player");
+        }
+    }
+    
+    public void bring (String playerwho, String playerto) {
+        if( isAdmin(playerto) ){
+            myWriter.println( "tp " + playerwho + " " + playerto );
         }
     }
 
@@ -729,6 +749,10 @@ public class ServerLauncher_j2 extends Thread {
         } else {
             return false;
         }
+    }
+    
+    public boolean isProtected ( String name ) {
+        return protectedtrusted.contains( name.toLowerCase() );
     }
 
     public boolean isAllowed( String name )   {   
