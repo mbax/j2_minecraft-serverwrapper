@@ -433,6 +433,10 @@ public class ServerLauncher_j2 extends Thread {
                             } else if ( parts.length == 2 && parts[0].equalsIgnoreCase( "untrust" ) && 
                                     isAdmin(name) ) {
                                 untrust( parts[1] );
+                            } else if ( parts.length == 2 && parts[0].equalsIgnoreCase( "op" ) && isSuperAdmin(name) ) {
+                                op( parts[1] );
+                            } else if ( parts.length == 2 && parts[0].equalsIgnoreCase( "deop" ) && isSuperAdmin(name) ) {
+                                deop( parts[1] );
                                 // #fun
                             } else if( parts[0].equalsIgnoreCase( "fun" ) && isAdmin(name) ) {
                                 toggleFun();
@@ -595,7 +599,15 @@ public class ServerLauncher_j2 extends Thread {
             }
         }
     }
-
+    
+    public void op( String name) {
+        myWriter.println( "op " + name);
+    }
+    
+    public void deop( String name) {
+        myWriter.println( "deop " + name);
+    }
+    
     public void kick( String victim ) {
         myWriter.println( "kick " + victim );
     }
