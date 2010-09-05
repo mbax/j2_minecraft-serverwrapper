@@ -442,7 +442,7 @@ public class ServerLauncher_j2 extends Thread {
                             } else if( parts[0].equalsIgnoreCase( "protect" ) && ( isTrusted(name) || isAdmin(name) || isSuperAdmin(name) ) ) {
                                 protectedtrusted.add( name );
                             } else if( parts[0].equalsIgnoreCase( "unprotect" ) && ( isTrusted(name) || isAdmin(name) || isSuperAdmin(name) ) ) {
-                                protectedtrusted.remove( name );}  
+                                protectedtrusted.remove( name );
                             } else if( parts.length == 2 && parts[0].equalsIgnoreCase( "tp" ) ) {
                                 teleport( name , parts[1] );                            
                             } else if( parts.length == 2 && parts[0].equalsIgnoreCase( "bring" )  ) {
