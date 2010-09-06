@@ -446,6 +446,17 @@ public class ServerLauncher_j2 extends Thread {
                                 teleport( name , parts[1] );                            
                             } else if( parts.length == 2 && parts[0].equalsIgnoreCase( "bring" )  ) {
                                 bring( parts[1] , name );
+//
+                            } else if( parts.length == 2 && parts[0].equalsIgnoreCase( "check" ) ) {
+                                if( isProtected( parts[1] ) )
+                                {
+                                   playerPrint("Yes");
+                                }
+                                else
+                                {
+                                    playerPrint("No");
+                                }
+//
                             } else {
                                 //Invalid command.
                             }
