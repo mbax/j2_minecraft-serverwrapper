@@ -438,7 +438,7 @@ public class ServerLauncher_j2 extends Thread {
                                 // #fun
                             } else if( parts[0].equalsIgnoreCase( "fun" ) && isAdmin(name) ) {
                                 toggleFun();
-                            } else if( parts[0].equalsIgnoreCase( "protect" ) && ( isTrusted(name) || isAdmin(name) || isSuperAdmin(name) ) ) {
+                            } else if( parts[0].equalsIgnoreCase( "protect" ) && isTrusted(name) ) {
                                 protectedtrusted.add( name );
                             } else if( parts[0].equalsIgnoreCase( "unprotect" ) && ( isTrusted(name) || isAdmin(name) || isSuperAdmin(name) ) ) {
                                 protectedtrusted.remove( name );
@@ -448,7 +448,7 @@ public class ServerLauncher_j2 extends Thread {
                                 bring( parts[1] , name );
 //
                             } else if( parts.length == 2 && parts[0].equalsIgnoreCase( "check" ) ) {
-                                if( isTrusted( parts[1] ) )
+                                if( isProtected( parts[1] ) )
                                 {
                                    playerPrint("Yes");
                                 }
