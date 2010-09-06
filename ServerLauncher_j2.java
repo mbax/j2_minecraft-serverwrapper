@@ -448,7 +448,7 @@ public class ServerLauncher_j2 extends Thread {
                                 bring( parts[1] , name );
 //
                             } else if( parts.length == 2 && parts[0].equalsIgnoreCase( "check" ) ) {
-                                if( isProtected( parts[1] ) )
+                                if( isTrusted( parts[1] ) )
                                 {
                                    playerPrint("Yes");
                                 }
