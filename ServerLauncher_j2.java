@@ -439,16 +439,16 @@ public class ServerLauncher_j2 extends Thread {
                             } else if( parts[0].equalsIgnoreCase( "fun" ) && isAdmin(name) ) {
                                 toggleFun();
                             } else if( parts[0].equalsIgnoreCase( "protect" ) && isTrusted(name) ) {
-                                protectedtrusted.add( name );
-                            } else if( parts[0].equalsIgnoreCase( "unprotect" ) && ( isTrusted(name) || isAdmin(name) || isSuperAdmin(name) ) ) {
-                                protectedtrusted.remove( name );
+                                protectedtrusted.add( name.toLowerCase() );
+                            } else if( parts[0].equalsIgnoreCase( "unprotect" ) && isTrusted(name) ) {
+                                protectedtrusted.remove( name.toLowerCase() );
                             } else if( parts.length == 2 && parts[0].equalsIgnoreCase( "tp" ) ) {
                                 teleport( name , parts[1] );                            
                             } else if( parts.length == 2 && parts[0].equalsIgnoreCase( "bring" )  ) {
                                 bring( parts[1] , name );
 //
                             } else if( parts.length == 2 && parts[0].equalsIgnoreCase( "check" ) ) {
-                                if( isProtected( parts[1] ) )
+                                if( isProtectedT( parts[1] ) )
                                 {
                                    playerPrint("Yes");
                                 }
@@ -638,10 +638,10 @@ public class ServerLauncher_j2 extends Thread {
     }
     
     public void teleport (String playerwho, String playerto) {
-        if( ( isFun || ( isTrusted(playerwho) && trustedTP ) ) && ( !isProtected(playerto) || isAdmin(playerwho) ) ){
+        if( ( isFun || ( isTrusted(playerwho) && trustedTP ) ) && ( !isProtectedT(playerto) || isAdmin(playerwho) ) ){
             myWriter.println( "tp " + playerwho + " " + playerto );
         }
-        else if(isProtected(playerto)){
+        else if(isProtectedT(playerto)){
             playerPrint("Cannot teleport to protected player");
         }
     }
@@ -772,7 +772,7 @@ public class ServerLauncher_j2 extends Thread {
         }
     }
     
-    public boolean isProtected ( String name ) {
+    public boolean isProtectedT ( String name ) {
         return protectedtrusted.contains( name.toLowerCase() );
     }
 
