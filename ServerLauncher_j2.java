@@ -569,7 +569,7 @@ public class ServerLauncher_j2 extends Thread {
             if( isPlayerWhiteList ) {
                 kick( bannee );
             } else {
-                myWriter.println( "unban " + bannee );
+                myWriter.println( "pardon " + bannee );
             }
         }
         return b != null;
