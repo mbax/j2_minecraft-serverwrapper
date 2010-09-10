@@ -375,7 +375,7 @@ public class ServerLauncher_j2 extends Thread {
                                 // #save
                             } else if( parts[0].equalsIgnoreCase( "save" ) && isAdmin(name) ) {
                                 saveLists();
-                                myWriter.println( "save-all" );
+                                
                                 // #list
                             } else if ( parts[0].equalsIgnoreCase( "list" ) ) {
                                 playerList();
@@ -869,6 +869,7 @@ public class ServerLauncher_j2 extends Thread {
     }
 
     public void saveLists() { 
+        myWriter.println( "save-all" );
         try{
             System.out.println( "Saving admins.txt, trusted.txt, black_list.txt/white_list.txt, and banned/allowed.txt..." );
             PrintWriter writer = new PrintWriter( new FileWriter( "admins.txt" ), true );
