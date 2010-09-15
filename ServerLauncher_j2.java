@@ -194,7 +194,7 @@ public class ServerLauncher_j2 extends Thread {
                     "Giving [\\w\\055\\.]* some \\p{Digit}{1,4}" );
             patterns[4] = Pattern.compile( beginning + "Opping ([\\p{Alnum}_\\-\\.]*)$" );
             patterns[5] = Pattern.compile( beginning + "De-opping ([\\p{Alnum}_\\-\\.]*)$" );
-            patterns[6] = Pattern.compile( beginning + "Stopping Server");
+            patterns[6] = Pattern.compile( beginning + "Stopping server");
 
             BufferedReader input = new BufferedReader( new InputStreamReader( System.in ) );
             while( keep_going ) {
@@ -480,7 +480,7 @@ public class ServerLauncher_j2 extends Thread {
                         else if( m[2].matches() ) {
                             connectedPlayers = m[2].group(1);
                         }  
-                        else if( m[6].matches() ) {
+                        if( m[6].matches() ) {
                             keep_going=false;
                             
                         }
