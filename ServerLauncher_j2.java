@@ -162,6 +162,7 @@ public class ServerLauncher_j2 extends Thread {
         loadLists();
 
         keep_going = true;
+        restartplz = false;
         myPlayerCount = 0;
         connectedPlayers = "";
 
@@ -482,7 +483,7 @@ public class ServerLauncher_j2 extends Thread {
                         }  
                         if( m[6].matches() ) {
                             keep_going=false;
-                            
+                            restartplz=true;
                         }
                     }
                 }
@@ -492,6 +493,18 @@ public class ServerLauncher_j2 extends Thread {
             myErrReader.close();
             myWriter.close();
             saveLists();
+            if(restartplz)
+            {
+             sleep(5000);
+              try {
+            
+                ServerLauncher_j2 o = new ServerLauncher_j2();
+                o.start();
+                o.join();
+              } catch( Exception e ) {
+                e.printStackTrace();
+              }
+            }
         } catch( Exception e ) {
             System.err.println( "ERROR: Exception. Stopping server." );
             myWriter.println( "stop" );
@@ -1132,6 +1145,7 @@ public class ServerLauncher_j2 extends Thread {
 
     // Variables used for run() and other functions.
     private boolean keep_going;
+    private boolean restartplz;
     private int myPlayerCount;
     private String connectedPlayers;
     private String ban_command;
