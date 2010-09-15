@@ -481,7 +481,7 @@ public class ServerLauncher_j2 extends Thread {
                             connectedPlayers = m[2].group(1);
                         }  
                         else if( m[6].matches() ) {
-                            System.out.println("bonk");
+                            keep_going=false;
                             
                         }
                     }
