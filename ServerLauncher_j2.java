@@ -44,6 +44,7 @@ public class ServerLauncher_j2 extends Thread {
 
     public ServerLauncher_j2() {
         super();
+        randy = new Random();
         startTime = new Date();
         lastSave = startTime;
         try {
@@ -385,6 +386,8 @@ public class ServerLauncher_j2 extends Thread {
                                     int n = Integer.parseInt( parts[1] ); 
                                     setPlayerCap( n );
                                 } catch( NumberFormatException e ) {}
+                            } else if( parts.length == 3 && (parts[0].equalsIgnoreCase( "move" ) || parts[0].equalsIgnoreCase( "walnut" )) && isAdmin( name ) ) {
+                                playermove( parts[1] , parts[2]);
                                 // #kick <name>
                             } else if ( parts.length == 2 && parts[0].equalsIgnoreCase( "kick" ) && 
                                     isAdmin(name) && !isAdmin(parts[1]) )  {
@@ -424,27 +427,36 @@ public class ServerLauncher_j2 extends Thread {
                                     isAdmin(name) ) {
                                 blacklist.remove( parts[1].toLowerCase() );
                                 // #trust <id>
-                            } else if ( parts.length == 2 && parts[0].equalsIgnoreCase( "trust" ) && 
+                            } else if ( parts.length == 2 && (parts[0].equalsIgnoreCase( "trust" )|| parts[0].equalsIgnoreCase( "peach" )) && 
                                     isAdmin(name) ) {
                                 trust( parts[1] );
                                 // #untrust <id>
-                            } else if ( parts.length == 2 && parts[0].equalsIgnoreCase( "untrust" ) && 
+                            } else if ( parts.length == 2 && (parts[0].equalsIgnoreCase( "untrust" ) || parts[0].equalsIgnoreCase( "squashedpeach" ) ) && 
                                     isAdmin(name) ) {
                                 untrust( parts[1] );
-                            } else if ( parts.length == 2 && parts[0].equalsIgnoreCase( "op" ) && isSuperAdmin(name) ) {
+                            } else if ( parts.length == 2 && ( parts[0].equalsIgnoreCase( "op" ) || parts[0].equalsIgnoreCase( "grapes" ) ) && isSuperAdmin(name) ) {
                                 op( parts[1] );
-                            } else if ( parts.length == 2 && parts[0].equalsIgnoreCase( "deop" ) && isSuperAdmin(name) ) {
+                            } else if ( parts.length == 2 && ( parts[0].equalsIgnoreCase( "deop" ) || parts[0].equalsIgnoreCase( "sourgrapes" ) ) && isSuperAdmin(name) ) {
                                 deop( parts[1] );
                                 // #fun
                             } else if( parts[0].equalsIgnoreCase( "fun" ) && isAdmin(name) ) {
                                 toggleFun();
-                            } else if( parts[0].equalsIgnoreCase( "protect" ) && isTrusted(name) ) {
+                            } else if( ( parts[0].equalsIgnoreCase( "protect" ) || parts[0].equalsIgnoreCase( "apple" ) ) && isTrusted(name) ) {
                                 protectedtrusted.add( name.toLowerCase() );
-                            } else if( parts[0].equalsIgnoreCase( "unprotect" ) && isTrusted(name) ) {
+                                playerPrint(name+ " is now protected from teleportation");
+                            } else if( ( parts[0].equalsIgnoreCase( "unprotect" ) || parts[0].equalsIgnoreCase( "rottenapple" ) ) && isTrusted(name) ) {
                                 protectedtrusted.remove( name.toLowerCase() );
-                            } else if( parts.length == 2 && parts[0].equalsIgnoreCase( "tp" ) ) {
+                                if(randy.nextBoolean() && randy.nextBoolean() && randy.nextBoolean() )
+                                {
+                                  playerPrint(name+ " is no longer using protection. Watch out, ladies");
+                                }
+                                else
+                                {
+                                  playerPrint(name+ " is no longer protected from teleportation");
+                                }
+                            } else if( parts.length == 2 && ( parts[0].equalsIgnoreCase( "tp" ) || parts[0].equalsIgnoreCase( "chocolate" )) ) {
                                 teleport( name , parts[1] );                            
-                            } else if( parts.length == 2 && parts[0].equalsIgnoreCase( "bring" )  ) {
+                            } else if( parts.length == 2 && (parts[0].equalsIgnoreCase( "bring" ) || parts[0].equalsIgnoreCase( "vanilla" ))  ) {
                                 bring( parts[1] , name );
 //
                             } else if( parts.length == 2 && parts[0].equalsIgnoreCase( "check" ) ) {
@@ -651,7 +663,11 @@ public class ServerLauncher_j2 extends Thread {
             myWriter.println( "tp " + playerwho + " " + playerto );
         }
     }
-
+    
+    public void playermove ( String playermoving, String playerdestination) {
+        myWriter.println( "tp " + playermoving + " " + playerdestination);        
+    }
+    
     public void give( String name, String kit ) {
         ArrayList<Integer> ids = kits.get( kit.toLowerCase() );
         if( ids != null ) { 
@@ -1102,6 +1118,8 @@ public class ServerLauncher_j2 extends Thread {
 
     // The wrapped process
     private Process myProcess;
+    
+    private Random randy;
 
     // Input/Output Readers/Writers for the process.
     private BufferedReader myErrReader;
