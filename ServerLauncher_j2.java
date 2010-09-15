@@ -586,22 +586,14 @@ public class ServerLauncher_j2 extends Thread {
         }
     }
 
-    public boolean unban( String bannee ) {
-        Integer b = permissions.remove( bannee.toLowerCase() );
-        if( b != null ) {
-            char n = 0;
-            if( ban_command.charAt( ban_command.length() - 1 ) == 'n' ) {
-                n = 'n';
-            }
+    public void unban( String bannee ) {
+        
 
-            playerPrint( bannee + " has been un" + ban_command + n + "ed." );
-            if( isPlayerWhiteList ) {
-                kick( bannee );
-            } else {
-                myWriter.println( "pardon " + bannee );
-            }
-        }
-        return b != null;
+        playerPrint( bannee + " has been unbanned." );
+            
+        myWriter.println( "pardon " + bannee );
+            
+        
     }
 
     public void admin( String admin, String name ) {
