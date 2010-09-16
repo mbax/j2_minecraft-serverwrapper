@@ -95,6 +95,20 @@ public class ServerLauncher_j2 extends Thread {
             } else {
                 myPlayerCap = -1;
             }
+            
+            value = p.getProperty( "summoncap" );
+            if( value != null ) {
+                try {
+                    mySummonCap = Integer.parseInt( value );
+                    System.out.println( "Setting summon cap cap to " + mySummonCap + "." );
+                } catch( NumberFormatException e ) {
+                    System.err.println( "ERROR: Invalid number for summon cap." );
+                    myPlayerCap = 64;
+                }
+            } else {
+                myPlayerCap = 64;
+            }
+            
             value = p.getProperty( "ram" );
             if( value != null ) {
                 try {
@@ -143,6 +157,7 @@ public class ServerLauncher_j2 extends Thread {
             autoSave = true;
             allowHelp = true;
             trustedTP = true;
+            mySummonCap = 64;
         }
         // Start the server process
         try {
@@ -275,8 +290,8 @@ public class ServerLauncher_j2 extends Thread {
                                     // A reasonable cap is 64.
                                     // A reasonable mbaxter cap is 256
                                     // A reasonable cap is a fez
-                                    if( times > 256 ) {
-                                        times = 256;
+                                    if( times > mySummonCap ) {
+                                        times = mySummonCap;
                                     }
                                 }
 
@@ -314,8 +329,8 @@ public class ServerLauncher_j2 extends Thread {
                                     } catch( Exception e ) {
                                     }
                                     // A reasonable cap is 64.
-                                    if( times > 256 ) {
-                                        times = 256;
+                                    if( times > mySummonCap ) {
+                                        times = mySummonCap;
                                     }
                                 }
 
@@ -1164,6 +1179,7 @@ public class ServerLauncher_j2 extends Thread {
     // Property Values
     private int myPlayerCap;
     private int myRAMUse;
+    private int mySummonCap;
     private boolean isPlayerWhiteList;
     private boolean isItemWhiteList;
     private boolean isFun;
