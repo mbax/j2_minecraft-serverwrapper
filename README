@@ -1,5 +1,14 @@
 Good job, you've read me.
 
+At the moment due to one lazy line IRC support is linux/mac only
+
 The compiled server launcher must be in the same directory as the minecraft server. 
+
+java -classpath pircbot.jar:. ServerLauncher_j2
+
+or on windows:
+
+java -classpath pircbot.jar;. ServerLauncher_j2
+
 
 It will auto-create the files it needs on first start.

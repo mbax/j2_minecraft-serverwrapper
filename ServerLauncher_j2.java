@@ -23,6 +23,7 @@ import java.io.*;
 import java.util.*;
 import java.util.regex.*;
 import java.text.SimpleDateFormat;
+import org.jibble.pircbot.*;
 
 public class ServerLauncher_j2 extends Thread {
 
@@ -37,6 +38,7 @@ public class ServerLauncher_j2 extends Thread {
             ServerLauncher_j2 o = new ServerLauncher_j2();
             o.start();
             o.join();
+            
         } catch( Exception e ) {
             e.printStackTrace();
         }
@@ -51,7 +53,20 @@ public class ServerLauncher_j2 extends Thread {
             FileInputStream fis = new FileInputStream( "ServerLauncher.properties" );
             Properties p = new Properties();
             p.load( fis );
-            String value = p.getProperty( "allowhelp" );
+            
+            String value = p.getProperty( "irc-enable" );
+            if( value != null && value.equalsIgnoreCase( "true" ) ) {
+                ircEnable = true;
+            } else {
+                ircEnable = false;
+            }
+            ircHost = p.getProperty( "irc-host" );
+            ircPort = p.getProperty( "irc-port" );
+            ircChannel = p.getProperty( "irc-channel" );
+
+            
+            
+            value = p.getProperty( "allowhelp" );
             if( value != null && value.equalsIgnoreCase( "false" ) ) {
                 allowHelp = false;
             } else {
@@ -139,6 +154,10 @@ public class ServerLauncher_j2 extends Thread {
                 p.setProperty( "autosave", "true" );
                 p.setProperty( "allowHelp","true" );
                 p.setProperty( "tpfortrusted", "true" );
+                p.setProperty( "irc-enable", "false" );
+                p.setProperty( "irc-host", "" );
+                p.setProperty( "irc-port", "" );
+                p.setProperty( "irc-channel", "" );
                 try { 
                     p.store( new FileOutputStream( "ServerLauncher.properties" ), "Properties for ServerLauncher_j2" );
                 } catch( IOException f ) {}
@@ -158,15 +177,38 @@ public class ServerLauncher_j2 extends Thread {
             allowHelp = true;
             trustedTP = true;
             mySummonCap = 64;
+            ircEnable = false;
+            ircChannel = "";
+            ircHost= "";
+            ircPort = "";
         }
         // Start the server process
         try {
-            myProcess = Runtime.getRuntime().exec( "java -Xms" + myRAMUse + "m -Xmx" + myRAMUse + "m -jar minecraft_server.jar nogui" );
+            myProcess = Runtime.getRuntime().exec( "java -classpath pircbot.jar:. -Xms" + myRAMUse + "m -Xmx" + myRAMUse + "m -jar minecraft_server.jar nogui" );
         } catch( IOException e ) {
             e.printStackTrace();
             System.err.println( "Could not run the server." );
             System.exit(1);
         }
+        
+        //IRC bot
+        if(ircEnable){
+          try {
+            bot = new ServerLauncher_j2_bot();
+            //bot.setVerbose(true);
+            bot.connect(ircHost);
+          
+          
+            bot.joinChannel(ircChannel);
+            
+            bot.sendMessage(ircChannel,"Never fear, a minecraft bot is here!");
+          }
+          catch(Exception eeeE)
+          {
+          
+          }
+        }
+        
         // Reader of stderr for the server
         myInReader = new BufferedReader( new InputStreamReader( myProcess.getInputStream() ) );
         // Reader of stdout for the server
@@ -197,7 +239,7 @@ public class ServerLauncher_j2 extends Thread {
             String line = "";
             // Patterns for regex pattern recognition. They are thorough so
             // sneaky players cannot break it by saying [INFO] and all that jazz.
-            Pattern[] patterns = new Pattern[7];
+            Pattern[] patterns = new Pattern[8];
             String colors = "(?:[^\\p{Alnum}^\\p{Digit}^\\055_^\\.]\\p{Alnum}){0,1}";
             String beginning = "^\\p{Digit}{4}-\\p{Digit}{2}-\\p{Digit}{2} \\p{Digit}{2}:\\p{Digit}{2}:\\p{Digit}{2} \\[INFO\\] ";
             patterns[0] = Pattern.compile( beginning +
@@ -211,6 +253,8 @@ public class ServerLauncher_j2 extends Thread {
             patterns[4] = Pattern.compile( beginning + "Opping ([\\p{Alnum}_\\-\\.]*)$" );
             patterns[5] = Pattern.compile( beginning + "De-opping ([\\p{Alnum}_\\-\\.]*)$" );
             patterns[6] = Pattern.compile( beginning + "Stopping server");
+            patterns[7] = Pattern.compile( beginning +
+                    "[<]" + colors + "([\\055\\w\\.]*)" + colors + "[>] ([\\p{Alpha}\\p{Digit}\\p{Punct} ]*)" );
 
             BufferedReader input = new BufferedReader( new InputStreamReader( System.in ) );
             while( keep_going ) {
@@ -252,7 +296,7 @@ public class ServerLauncher_j2 extends Thread {
                             cap += "/" + myPlayerCap;
                         }
                         if( myPlayerCap >= myPlayerCount ) {
-                            playerPrint( "There are currently " + myPlayerCount + cap + " players on the server." );
+                            //playerPrint( "There are currently " + myPlayerCount + cap + " players on the server." );
                         }
                     }
                 }
@@ -272,10 +316,28 @@ public class ServerLauncher_j2 extends Thread {
                         if( !m[3].matches() ) {
                             System.out.println( "E: " + line );
                         }
+                        
+                        //irc time
+                        if( m[7].matches() && !m[0].matches()) {
+                          String name = m[7].group(1);
+                          String message = m[7].group(2);
+                          if(ircEnable && !name.equalsIgnoreCase("CONSOLE") )
+                          {
+                            bot.sendMessage(ircChannel,"[mc] "+name+": "+message);
+                          }
+                        }
+                        
                         // m[0] matches chat messages beginning with a pound sign.
                         if( m[0].matches() ) {
                             String name = m[0].group(1);
+                            
                             String[] parts = m[0].group(2).split( "\\s+" );
+                            
+                           
+                            
+                            
+                            
+                            
                             // #summon <item-id> <count> / #summon <kit>
                             if( parts.length >= 2 && ( parts[0].equalsIgnoreCase( "summon" ) || parts[0].equalsIgnoreCase( "s" ) ) 
                                     && ( isFun || isTrusted(name) ) ) {
@@ -510,9 +572,9 @@ public class ServerLauncher_j2 extends Thread {
             saveLists();
             if(restartplz)
             {
-             sleep(5000);
+             sleep(10000);
               try {
-            
+                bot.disconnect();
                 ServerLauncher_j2 o = new ServerLauncher_j2();
                 o.start();
                 o.join();
@@ -747,7 +809,8 @@ public class ServerLauncher_j2 extends Thread {
 
         playerPrint( "Uptime: " + time );
     }
-
+    
+    
     public void ipList( boolean onlineOnly ){ 
         Collection<String> players;
         if( onlineOnly )
@@ -1176,7 +1239,13 @@ public class ServerLauncher_j2 extends Thread {
     // TODO: Implement me
     private HashMap<String,Date> playerLoginTimes;
 
+    private ServerLauncher_j2_bot bot;
+
     // Property Values
+    private boolean ircEnable;
+    private String ircHost;
+    private String ircPort;
+    private String ircChannel;
     private int myPlayerCap;
     private int myRAMUse;
     private int mySummonCap;
