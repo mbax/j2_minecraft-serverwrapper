@@ -63,7 +63,7 @@ public class ServerLauncher_j2 extends Thread {
             ircHost = p.getProperty( "irc-host" );
             ircPort = p.getProperty( "irc-port" );
             ircChannel = p.getProperty( "irc-channel" );
-
+            ircNick = p.getProperty( "irc-nickname" );
             
             
             value = p.getProperty( "allowhelp" );
@@ -158,6 +158,7 @@ public class ServerLauncher_j2 extends Thread {
                 p.setProperty( "irc-host", "" );
                 p.setProperty( "irc-port", "" );
                 p.setProperty( "irc-channel", "" );
+                p.setProperty( "irc-nickname", "" );
                 try { 
                     p.store( new FileOutputStream( "ServerLauncher.properties" ), "Properties for ServerLauncher_j2" );
                 } catch( IOException f ) {}
@@ -181,6 +182,7 @@ public class ServerLauncher_j2 extends Thread {
             ircChannel = "";
             ircHost= "";
             ircPort = "";
+            ircNick = "";
         }
         // Start the server process
         try {
@@ -194,7 +196,7 @@ public class ServerLauncher_j2 extends Thread {
         //IRC bot
         if(ircEnable){
           try {
-            bot = new ServerLauncher_j2_bot();
+            bot = new ServerLauncher_j2_bot(ircNick);
             //bot.setVerbose(true);
             bot.connect(ircHost);
           
@@ -563,6 +565,14 @@ public class ServerLauncher_j2 extends Thread {
                             restartplz=true;
                         }
                     }
+                }
+                if(bot.hasMsg())
+                {
+                  String[] newirc=bot.getNewMsgs();
+                  for(int $x=0;$x<newirc.length;$x++)
+                  {
+                    playerPrint(newirc[$x]);
+                  }
                 }
                 sleep( 100 );
             }
@@ -1246,6 +1256,7 @@ public class ServerLauncher_j2 extends Thread {
     private String ircHost;
     private String ircPort;
     private String ircChannel;
+    private String ircNick;
     private int myPlayerCap;
     private int myRAMUse;
     private int mySummonCap;
