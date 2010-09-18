@@ -566,12 +566,15 @@ public class ServerLauncher_j2 extends Thread {
                         }
                     }
                 }
-                if(bot.hasMsg())
+                if(ircEnable)
                 {
-                  String[] newirc=bot.getNewMsgs();
-                  for(int $x=0;$x<newirc.length;$x++)
+                  if(bot.hasMsg())
                   {
-                    playerPrint(newirc[$x]);
+                    String[] newirc=bot.getNewMsgs();
+                    for(int $x=0;$x<newirc.length;$x++)
+                    {
+                      playerPrint(newirc[$x]);
+                    }
                   }
                 }
                 sleep( 100 );
