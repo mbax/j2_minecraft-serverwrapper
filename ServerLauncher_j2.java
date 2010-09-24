@@ -587,7 +587,7 @@ public class ServerLauncher_j2 extends Thread {
             {
              sleep(10000);
               try {
-                bot.disconnect();
+                if(ircEnable){bot.disconnect();}
                 ServerLauncher_j2 o = new ServerLauncher_j2();
                 o.start();
                 o.join();
